@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import PrenotazioneVoli.TestScanner;
+
 
 // ## Implementation preserve start class import. 
 // ## Implementation preserve end class import. 
@@ -17,12 +19,19 @@ import java.util.ArrayList;
  * Contiene tutti i metodi per personalizzare un prenotazione di un volo; questi metodi
  * vengono richiamati nel giusto ordine dalla classe di TestMain, che si occupa di
  * inizializzare gli oggetti principali come Prenotazione e Utente, e validare i risultati ottenuti.
- * L'inizializzazione degli oggetti ove serve viene effettuata ccon valori casuali o con degli attributi della classe Database,
+ * L'inizializzazione degli oggetti, ove serve, viene effettuata con valori casuali o con degli attributi della classe Database,
  * che contiene valori predefiniti, come specifici voli e posti a sedere; dato che non
  * è richiesto creare un sistema dinamico utilizzando un vero database esterno, Database 
  * serve a fornire valori di esempio per poter testare il comportamento del sistema, in 
  * numero limitato.
  *  
+ * Oltre alla classe Database viene usata una classe wrapper TestScanner che contiene
+ * metodi che consentono di richiedere input da console (oggetti Scanner).
+ * Ogni input richiesto all'interno dei metodi di questa classe è controllato in modo
+ * da non generare eccezioni o errori come InputMismatchException o ParseError:
+ * il richiamo dei metodi next() o nextInt() della classe TestScanner è circondato da
+ * try/catch e cicli while, in questo modo l'algoritmo forza l'utente a inserire
+ * l'input atteso richiedendoglielo ad ogni errore commesso.
  *  
  * @author se-17-user
  *
@@ -46,7 +55,8 @@ public class Prenotazione
 		super();
 		this.identificativo = identificativo;
 		this.utente = utente;
-		Database db = new Database();
+		this.db = new Database();
+		test = new TestScanner();
 	}
 	/** Attributes */
     private int identificativo;
@@ -64,6 +74,7 @@ public class Prenotazione
     private BagaglioMano bm;
     
     private Database db;
+    private TestScanner test;
     // ## Implementation preserve start class associations. 
     // ## Implementation preserve end class associations. 
    
@@ -134,15 +145,15 @@ public class Prenotazione
         // ## Implementation preserve start class method.calcolaImporto@double@@@Volo@Assicurazione@Posto@CheckIn@BagaglioMano@BagaglioStiva 
         // ## Implementation preserve end class method.calcolaImporto@double@@@Volo@Assicurazione@Posto@CheckIn@BagaglioMano@BagaglioStiva 
     	int i;
-    	totale += volo.getCosto();
-    	totale = totale*numeroPasseggeri;
-    	totale += ass.getCosto();
-    	totale += ci.getCosto();
-    	totale += bs.getCostoBs();
-    	totale += bm.getCostoBm();
+    	totale = totale + volo.getCosto();
+    	totale = totale * numeroPasseggeri;
+    	totale = totale + ass.getCosto();
+    	totale = totale + ci.getCosto();
+    	totale = totale + bs.getCostoBs();
+    	totale = totale + bm.getCostoBm();
     	for(i=0; i < posto.size(); i++){
-    		
-    		totale += posto.get(i).getCosto();
+    
+    		totale = totale + posto.get(i).getCosto();
     	}
     	return totale;
     }
@@ -197,29 +208,35 @@ public class Prenotazione
     	Boolean checked = false;
     	//inserisci carta
     	while(!checked){
-    		Scanner S=new Scanner(System.in);
+    		
     		try{
     			System.out.println("Inserisci il numero della nuova carta per effettuare il pagamento");
     		
-    			numCarta =S.nextInt();
+    			
+    			numCarta = test.nextInt();
     			System.out.println(numCarta);
     	
     			System.out.println("Inserisci il numero di sicurezza della nuova carta");
-    			codSicurezza =S.nextInt();
+    			
+    			codSicurezza= test.nextInt();
     			System.out.println(codSicurezza);
     	
     			System.out.println("Inserisci la scadenza della nuova carta");
-    			scadenza=S.next();
+    			
+    			scadenza = test.next();
     			System.out.println(scadenza);
     	
     			System.out.println("Inserisci la quantità di denaro sulla nuova carta");
-    			denaro=S.nextInt();
+    			
+    			denaro=test.nextInt();
     			System.out.println(denaro);
     			
     			checked = true;
     		}
     		catch(InputMismatchException e){
-    			S.reset();
+    			System.out.println("Input errato:      riprova per favore");
+				
+
     		}
     	}
     	Carta carta = new Carta(numCarta, codSicurezza, scadenza, denaro);
@@ -264,16 +281,16 @@ public class Prenotazione
     	String partenza;
     	//inserisci la partenza
     	
-    	Scanner S = new Scanner(System.in);
-    	partenza = S.next();
     	
+    	
+    	partenza = test.next();
     	
     	System.out.println("Inserisci la città di arrivo [inserire solo parigi]");
     	String destinazione;
     	//inserisci la destinazione
     	
-    	destinazione=S.next();
     	
+    	destinazione = test.next();
     	Boolean checked = false;
     	String data ="";
     	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -282,8 +299,8 @@ public class Prenotazione
     	
     		//inserisci la data oltre la quale si vuole partire
     	
-    		data = S.next();
-    	
+    		
+    		data = test.next();
     	
     		try {
 
@@ -291,7 +308,6 @@ public class Prenotazione
     			checked = true;
 
     		} catch (ParseException e) {
-            
     		}
     	}
     	
@@ -337,7 +353,8 @@ public class Prenotazione
     	while(!checked){
     		Scanner S=new Scanner(System.in);
     		try {
-    			conferma =S.nextInt();
+    			
+    			conferma = test.nextInt();
     			if(!(conferma < risultati.size() && (conferma >= 0))) {
     		
     				System.out.println("Input errato:              Scegli un volo esistente");
@@ -372,11 +389,12 @@ public class Prenotazione
     	Boolean checked = false;
     	
     	while(!checked){
-    		Scanner S=new Scanner(System.in);
+    		
     		try {
-    			num=S.nextInt();
-    			if(num == 0){
-    				System.out.println("Non puoi prenotare un volo per zero persone...");
+    			
+    			num = test.nextInt();
+    			if(num <= 0){
+    				System.out.println("Non puoi prenotare un volo per zero persone o meno...");
     			}
     			else{
     				checked = true;
@@ -384,7 +402,7 @@ public class Prenotazione
     		} 
     		catch(InputMismatchException e){
 				System.out.println("Input errato:              riprova");
-				S.reset();
+				
 			}
     	}
     	return num;
@@ -441,20 +459,23 @@ public class Prenotazione
     			Boolean checked = false;
     	    	
     	    	while(!checked){
-    	    		Scanner S=new Scanner(System.in);
+    	    		
     	    		try {
-    	    			num=S.nextInt();
+    	    			
+    	    			num = test.nextInt();
     	    			if(!(num < nonOccupati.size() && (num >= 0))){
     	    				System.out.println("Posto non disponibile:              Scegli un posto libero");
     	    			}
     	    			else {
     	    				checked = true;
-    	    				S.reset();
+    	    				
     	    			}
-    	    		} 
+    	    				
+    	    		}
+    	    				
     	    		catch(InputMismatchException e){
     					System.out.println("Input errato:              riprova");
-    					S.reset();
+    					
     				}
     	    	}
     	    	
@@ -481,7 +502,7 @@ public class Prenotazione
      */
     public BagaglioStiva richiedeBagaglioStiva (  )
     {	
-    	ArrayList<BagaglioStiva> bagagli = Database.getBs();
+    	ArrayList<BagaglioStiva> bagagli = db.getBs();
     
     	System.out.println("Inserisci il numero del tipo di bagaglio a stiva desiderato o  premi un tasto qualsiasi per non scegliere\n");
     	
@@ -492,12 +513,14 @@ public class Prenotazione
     	
     	}
     	int num;
-    	Scanner S=new Scanner(System.in);
+    	
     	
     	
     	try {
-    		num=S.nextInt();
-   			if(num == 0){
+    		
+    		
+   			num= test.nextInt();
+    		if(num == 0){
    				return bagagli.get(0);
    			}
    			else {
@@ -531,7 +554,7 @@ public class Prenotazione
      */
     public BagaglioMano richiedeBagaglioMano (  )
     {
-    	ArrayList<BagaglioMano> bagagli = Database.getBm();
+    	ArrayList<BagaglioMano> bagagli = db.getBm();
         
     	System.out.println("Inserisci il numero del tipo di bagaglio a mano desiderato o  premi un tasto qualsiasi per non scegliere\n");
     	
@@ -542,12 +565,11 @@ public class Prenotazione
     	
     	}
     	int num;
-    	Scanner S=new Scanner(System.in);
-    	
     	
     	
     	try{
-    		num=S.nextInt();
+    		
+    		num = test.nextInt();
     		if(num == 0){
     			return bagagli.get(0);
     		}
@@ -581,9 +603,11 @@ public class Prenotazione
     {
     	// ## Implementation preserve start class method.richiedeAsssicurazione@Assicurazione@@ 
         // ## Implementation preserve end class method.richiedeAsssicurazione@Assicurazione@@
+    	System.out.println("Richiede assicurazione");
+    	ArrayList<Assicurazione> assicurazioni = null;
     	
-    	ArrayList<Assicurazione> assicurazioni = Database.getAssic();
-        
+    	assicurazioni = db.getAssic();
+    	
     	System.out.println("Inserisci il numero del tipo di assicurazione sul viaggio desiderata o  premi un tasto qualsiasi per non scegliere\n");
     	
     	for(int i=0; i< assicurazioni.size();i++){
@@ -593,12 +617,15 @@ public class Prenotazione
     	
     	}
     	int num;
-    	Scanner S=new Scanner(System.in);
     	
     	
     	try{
-    		num=S.nextInt();
+    		
+    		
+        	num = this.test.nextInt();
         	
+    		
+    		
     		if(num == 0){
     			return assicurazioni.get(0);
     		}
@@ -631,7 +658,7 @@ public class Prenotazione
     	// ## Implementation preserve start class method.richiedeCheckIn@CheckIn@@ 
         // ## Implementation preserve end class method.richiedeCheckIn@CheckIn@@ 
     	
-    	ArrayList<CheckIn> ci = Database.getIn();
+    	ArrayList<CheckIn> ci = db.getIn();
         
     	System.out.println("Inserisci il numero del tipo di check-in desiderato o  premi un tasto qualsiasi per scegliere 'Online'\n");
     	
@@ -642,12 +669,11 @@ public class Prenotazione
     	
     	}
     	int num;
-    	Scanner S=new Scanner(System.in);
-    	
     	
     	
     	try {
-    		num=S.nextInt();
+    		
+    		num= test.nextInt();
     		if(num == 0){
     			return ci.get(0);
     		}
@@ -699,7 +725,7 @@ public class Prenotazione
     	
     	//richiede una scelta: proseguire o accedere alle feature i sconto o cambio carta
     	//il ciclo permette di rimanere nella fase di anteprima fino a che non si accetta (y) o rifiuta (n)
-    	Scanner S=new Scanner(System.in);
+    	
     	int index;
     	while(!(conferma.equals("y") || conferma.equals("n"))){
     		System.out.println("\n                                Confermi? [y/n per proseguire, c per cambiare carta, s per applicare uno sconto]");
@@ -707,10 +733,12 @@ public class Prenotazione
     		
     		//questo ciclo permette di ritornare alla possibilità di scelta dopo un input
     		//errato o una scelta di una feature aggiuntiva( che non implica la fine della prenotazione)
-    		conferma =S.next();
+    		
+    		conferma=test.next();
     		while(!(conferma.equals("y") || conferma.equals("n") || conferma.equals("s") || conferma.equals("c"))){
     			System.out.println("Input errato:                   Confermi?[y/n/c/s]");
-    			conferma =S.next();
+    			
+    			conferma=test.next();
     		}
     		
     		//dopo la conferma si effettua un ultimo controllo sulla sufficienza di dcenaro sulla carta
@@ -727,7 +755,7 @@ public class Prenotazione
 				}
     			this.verificaVolo(volo);
     			this.effettuaPagamento();
-    			S.close();
+    			
     			return true;
     		}
     		else {
@@ -741,8 +769,9 @@ public class Prenotazione
     				}
     			}
     			if(conferma.equals("s")){   	//feature per applicare sconto
-    				if(giaUsato){
-    					System.out.println("Hai già applicato uno sconto su questa prenotazione!");
+    				if(giaUsato 
+    							|| this.getUtente().getSconti().isEmpty()){
+    					System.out.println("Non hai più sconti disponibili per questa prenotazione!");
     				} else {
     				Sconto s = this.richiedeSconto();
     				this.applicaSconto(s);
@@ -752,15 +781,15 @@ public class Prenotazione
     				}
     			}
     			if(conferma.equals("n")){
-    				S.close();
+    				
     				return false;
     			}
     		}
     	}
-    	S.close();
+    	//il tester non potrà mai raggiungere questa zona: ogni selezione è gestita dentro
+    	//al ciclo, ma il compilatore necessita di uno statement di return anche fuori da esso
     	return true;
-    	// ## Implementation preserve start class method.visualizzaAnteprima@Boolean@@ 
-        // ## Implementation preserve end class method.visualizzaAnteprima@Boolean@@ 
+    	
     }
     /**
      * 
@@ -773,7 +802,8 @@ public class Prenotazione
      * @param String[]
      * @return ArrayList<Volo>
      */
-    public ArrayList<Volo> ricercaVolo ( String[] parametri )
+    @SuppressWarnings("deprecation")
+	public ArrayList<Volo> ricercaVolo ( String[] parametri )
     {
     	
     	ArrayList<Volo> soluzioni = new ArrayList<Volo>();
@@ -786,18 +816,18 @@ public class Prenotazione
              date1 = formatter.parse(dateInString);
             
          } catch (ParseException e) {
-             e.printStackTrace();
+            return soluzioni;
          }
          ArrayList<Volo> tuttiVoli = db.getVolo();
-    	
+         System.out.println(date2.toString());
+         System.out.println(date1.toString());
     	for(int i=0; i < tuttiVoli.size(); i++){
     		
     		
-    		date2 = Database.getVolo().get(i).getDataPartenza();
-    		if((date1.before(date2) 
-    					|| date1.equals(date2) )
-    					&& parametri[0].equals(Database.getVolo().get(i).getPartenza()) 
-    					&& parametri[1].equals(Database.getVolo().get(i).getDestinazione())) {
+    		date2 = db.getVolo().get(i).getDataPartenza();
+    		if(date1.before(date2) 
+    					&& parametri[0].equals(db.getVolo().get(i).getPartenza()) 
+    					&& parametri[1].equals(db.getVolo().get(i).getDestinazione())) {
     		
     			soluzioni.add(db.getVolo().get(i));
     			
@@ -842,19 +872,20 @@ public class Prenotazione
     	Boolean checked = false;
     	
     	while(!checked){
-    		Scanner S=new Scanner(System.in);
+    		
     		try{
-    			conferma =S.nextInt();
+    			
+    			conferma=test.nextInt();
     			if(!(conferma < this.getUtente().getSconti().size() && (conferma >= 0))){
     				System.out.println("Input errato:              Scegli uno sconto");
-    				S.reset();
+    				
     			} else{
     				checked = true;
     			}
     		}
     		catch(InputMismatchException e){
     			System.out.println("Input errato:              Scegli uno sconto");
-    			S.reset();
+    			
     		}
     		
     		}
@@ -1117,6 +1148,22 @@ public class Prenotazione
 	 */
 	public void setBm(BagaglioMano bm) {
 		this.bm = bm;
+	}
+
+	public Database getDb() {
+		return db;
+	}
+
+	public void setDb(Database db) {
+		this.db = db;
+	}
+
+	public TestScanner getTest() {
+		return test;
+	}
+
+	public void setTest(TestScanner test) {
+		this.test = test;
 	}
 }
 

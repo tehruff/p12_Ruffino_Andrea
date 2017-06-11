@@ -2,7 +2,7 @@ package PrenotazioneVoli;
 import java.util.ArrayList;
 import java.util.Date;
 /**
- * Classe usata come insieme di dati statici predefiniti in modo da simulare un vero 
+ * Classe usata come insieme di dati i predefiniti in modo da simulare un vero 
  * database esterno. Questa scelta è stata effettuata per motivi di praticità e non
  * risulta nel diagramma dei modelli: l'applicazione infatti richiederebbe l'uso di un
  * server esterno al sistema, ma la sua realizzazione va oltre i fini di questo progetto.
@@ -14,13 +14,13 @@ import java.util.Date;
  */
 public class Database {
 	
-	private static ArrayList<Posto> posto;
-	private static ArrayList<Volo> volo;
-	private static ArrayList<Sconto> sconto;
-	private static ArrayList<Assicurazione> assic;
-	private static ArrayList<BagaglioStiva> bs;
-	private static ArrayList<BagaglioMano> bm;
-	private static ArrayList<CheckIn> in;
+	private  ArrayList<Posto> posto;
+	private  ArrayList<Volo> volo;
+	private  ArrayList<Sconto> sconto;
+	private ArrayList<Assicurazione> assic;
+	private  ArrayList<BagaglioStiva> bs;
+	private  ArrayList<BagaglioMano> bm;
+	private  ArrayList<CheckIn> in;
 	/**
 	 * Il costruttore definisce gli attributi della classe, rendendoli pronti per l'utilizzo.
 	 * Dovrebbe essere istanziato un oggetto Database nel costruttore della classe che lo utilizza,
@@ -68,7 +68,7 @@ public class Database {
 		
 		
 		Posto posto1= new Posto(0, false, false, 0); 
-		Posto posto2= new Posto(1, false, false, 0); 
+		Posto posto2= new Posto(1, true, false, 10); 
 		Posto posto3= new Posto(2, false, false, 0); 
 		Posto posto4= new Posto(3, false, true, 0); 
 		Posto posto5= new Posto(4, false, true, 0); 
@@ -119,7 +119,7 @@ public class Database {
 		Volo volo1 = new Volo(budapest, parigi, 100, dpar1, "RyanAir", 220, 20, posto);
 		Volo volo2 = new Volo(budapest, parigi, 101, dpar2, "Chczech Airlines", 240, 20, posto);
 		Volo volo3 = new Volo(budapest, parigi, 102, dpar3, "British Airlines", 200, 20, posto);
-		Volo volo4 = new Volo(milano, parigi, 103, dpar4, "Alitalia", 110, 20, posto);
+		Volo volo4 = new Volo(milano, parigi, 103, dpar4, "Alitalia", 100, 20, posto);
 		Volo volo5 = new Volo(milano, parigi, 104, dpar5, "RyanAir", 120, 20, posto);
 		Volo volo6 = new Volo(milano, parigi, 105, dpar6, "Turkish Airlines", 130, 20, posto);
 		Volo volo7 = new Volo(londra, parigi, 106, dpar7, "RyanAir", 100, 20, posto);
@@ -224,7 +224,7 @@ public class Database {
 	 * Metodo get dell'attributo posto
 	 * @return ArrayList<Posto>
 	 */
-	public static ArrayList<Posto> getPosto() {
+	public  ArrayList<Posto> getPosto() {
 		return posto;
 	}
 
@@ -233,7 +233,7 @@ public class Database {
 	 * Metodo get dell'attributo volo
 	 * @return ArrayList<Volo>
 	 */
-	public static ArrayList<Volo> getVolo() {
+	public  ArrayList<Volo> getVolo() {
 		return volo;
 	}
 
@@ -242,7 +242,7 @@ public class Database {
 	 * Metodo get dell'attributo sconto
 	 * @return ArrayList<Sconto>
 	 */
-	public static ArrayList<Sconto> getSconto() {
+	public  ArrayList<Sconto> getSconto() {
 		return sconto;
 	}
 
@@ -251,7 +251,7 @@ public class Database {
 	 * Metodo get dell'attributo assic 
 	 * @return ArrayList<Assicurazione>
 	 */
-	public static ArrayList<Assicurazione> getAssic() {
+	public ArrayList<Assicurazione> getAssic() {
 		return assic;
 	}
 
@@ -260,7 +260,7 @@ public class Database {
 	 * Metodo get dell'attributo bs
 	 * @return ArrayList<BagaglioStiva>
 	 */
-	public static ArrayList<BagaglioStiva> getBs() {
+	public  ArrayList<BagaglioStiva> getBs() {
 		return bs;
 	}
 
@@ -269,7 +269,7 @@ public class Database {
 	 * Metodo get dell'attributo bm
 	 * @return ArrayList<BagaglioMano>
 	 */
-	public static ArrayList<BagaglioMano> getBm() {
+	public  ArrayList<BagaglioMano> getBm() {
 		return bm;
 	}
 
@@ -278,7 +278,7 @@ public class Database {
 	 * Metodo get dell'attributo in
 	 * @return ArrayList<CheckIn>
 	 */
-	public static ArrayList<CheckIn> getIn() {
+	public  ArrayList<CheckIn> getIn() {
 		return in;
 	}
 
