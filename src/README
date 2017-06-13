@@ -1,0 +1,8 @@
+Istruzioni per importare direttamente il progetto ed aprirlo:
+
+1: Scaricare la cartella PrenotazioneVoli in una qualsiasi directory
+2: Dopo aver aperto Eclipse, File -> Import -> Existing Projects into Workspace
+3: Selezionare la directory scaricata
+4: cliccare Finish
+
+I file della documentazione javadoc sono nella cartella javadoc all'interno della sottocartella PrenotazioneVoli
