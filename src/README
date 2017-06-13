@@ -1,9 +1,0 @@
-Istruzioni per importare direttamente il progetto ed aprirlo:
-
-1: Scaricare la cartella compressa PrenotazioneVoli.tar in una qualsiasi directory
-2: Dopo aver aperto Eclipse, File -> Open Projects from File System
-3: Selezionare Archivio
-4: ricercare la cartella compressa scaricata e selezionarla
-5: cliccare Finish
-
-I file della documentazione javadoc sono nella cartella javadoc all'interno della sottocartella PrenotazioneVoli
